@@ -1,0 +1,54 @@
+---
+title: "Project-DATA"
+author: "Theo Schouten"
+date: "2025-09-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+library(tidyverse)
+library(dplyr)
+library(jsonlite)
+
+df_1 <- read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
+
+df_2 <- read.csv("https://ourworldindata.org/grapher/average-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA~MEX~RUS~CHN~GBR~IRL~ISL~AND~ESP~FRA~DEU~DNK~NLD~ITA~BFA~RWA~COD~ZAF~SOM~TCD~DZA~MLI~AUS~PNG~NZL~BRA~PER~COL~NOR~FIN~SWE&overlay=download-data")
+
+df_3 <- read.csv("https://ourworldindata.org/grapher/total-government-expenditure-on-education-gdp.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA&overlay=download-data")
+
+df_4 = merge(df_1,df_2,all = TRUE)
+df_5 = merge(df_4,df_3,all = TRUE)
+dim(df_5)
+
+countries = c("Guatemala", "Austria", "Greece", "Belgium", "Finland", "Germany", "United States", "Singapore", 
+"Nepal", "South Korea", "Iran", "Japan", "Pakistan", "Vietnam", "China", "Trinidad and Tobago",
+"Costa Rica", "Netherlands", "Portugal", "Slovakia", "Norway", "Malaysia", "Cuba", "Canada", 
+"Spain", "Italy", "Nicaragua", "Bangladesh", "Denmark", "Iraq", "UK", "Sri Lanka", "Sweden", 
+"Thailand", "Mongolia", "Panama", "India", "Haiti", "Ireland", "Mexico", "Uzbekistan", "Honduras", 
+"El Salvador", "Indonesia", "Hungary", "France", "Poland", "Philippines", "Saudi Arabia", 
+"Czech Republic", "Dominican Republic", "Kazakhstan", "Switzerland", "Belize", "Jamaica", 
+"Egypt", "South Africa", "Nigeria", "Tanzania", "Ethiopia")
+filtered_df = df_5 %>%
+  filter(Entity %in% countries)
+dim(filtered_df)
+##This part I had to look up
+##Im also not sure what time.1 is but it came with the data set so I kept it
+final = filtered_df %>%
+  group_by(Entity) %>%
+  summarise(across(everything(), ~ first(na.omit(.))))
+dim(final)
+head(final)
+final
+```
+
+
+```{r pressure, echo=FALSE}
+
+```
+
+
