@@ -52,20 +52,7 @@ df_11 = merge(df_7, df_8, all = TRUE)
 df_12 = merge(df_9, df_10, all = TRUE)
 df_13 = merge(df_11, df_12, all = TRUE)
 
-# countries = c("Guatemala", "Austria", "Greece", "Belgium", "Finland", "Germany", "United States", "Singapore", 
-# "Nepal", "South Korea", "Iran", "Japan", "Pakistan", "Vietnam", "China", "Trinidad and Tobago",
-# "Costa Rica", "Netherlands", "Portugal", "Slovakia", "Norway", "Malaysia", "Cuba", "Canada", 
-# "Spain", "Italy", "Nicaragua", "Bangladesh", "Denmark", "Iraq", "UK", "Sri Lanka", "Sweden", 
-# "Thailand", "Mongolia", "Panama", "India", "Haiti", "Ireland", "Mexico", "Uzbekistan", "Honduras", 
-# "El Salvador", "Indonesia", "Hungary", "France", "Poland", "Philippines", "Saudi Arabia", 
-# "Czech Republic", "Dominican Republic", "Kazakhstan", "Switzerland", "Belize", "Jamaica", 
-# "Egypt", "South Africa", "Nigeria", "Tanzania", "Ethiopia")
-#filtered_df = df_7 %>%
-  #filter(Entity %in% countries)
-  
-##This part I had to look up
-##Im also not sure what time.1 is but it came with the data set so I kept it
-  
+
 final = df_13 %>%
   group_by(Entity) %>%
   summarise(across(everything(), ~ first(na.omit(.)))) %>%
