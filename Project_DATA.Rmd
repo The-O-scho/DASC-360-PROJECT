@@ -43,7 +43,8 @@ df_7 = df_7 %>%
   rename(Entity = Country) 
 
 df_7 = df_7[,"Citations per document"]
-
+#load up on economic data to predict mys
+#gini index wealth disparity
 
 df_8 = merge(df_1,df_2,all = TRUE)
 df_9 = merge(df_3,df_4,all = TRUE)
@@ -57,7 +58,7 @@ final = df_13 %>%
   group_by(Entity) %>%
   summarise(across(everything(), ~ first(na.omit(.)))) %>%
   drop_na() %>%
-   select(-Code, -Year, -time.1, -time, -owid_region, -civ_libs_vdem__estimate_best)
+   dplyr::select(-Code, -Year, -time.1, -time, -owid_region, -civ_libs_vdem__estimate_best)
 
 final
 ```
