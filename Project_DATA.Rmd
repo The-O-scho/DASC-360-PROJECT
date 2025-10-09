@@ -99,16 +99,24 @@ ggplot(data = final, aes(x = Entity, y = `mean_rights`)) +
   geom_point() 
 ggplot(data = final, aes(x = Entity, y = `density_per_km`)) +
   geom_point() 
+```
 
+```{r}
 
-
+pairs(numeric_final, pch= 16)
 
 corrplot(cor(numeric_final, use = "complete.obs"), method = "square")
+
+cor(numeric_final)
+
+```
+
+```{r}
+
 
 
 
 ```
-
 
 
 
