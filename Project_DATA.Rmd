@@ -98,6 +98,9 @@ ggplot(data = final, aes(x = Entity, y = `Density..per.km..`)) +
 
 
 
+
+corrplot(cor(final, use = "complete.obs"), method = "square")
+
 ```
 
 
