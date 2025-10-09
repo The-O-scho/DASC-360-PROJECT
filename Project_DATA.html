@@ -672,75 +672,43 @@ comparison</code></pre>
 
 
 #Some of these make sense and should be kept but some are unreasonable and should be throw away, more analysis needed.</code></pre>
-<pre class="r"><code>#display next to each other 
-cat(&quot;With outliers:\n&quot;)</code></pre>
-<pre><code>## With outliers:</code></pre>
-<pre class="r"><code>print(cor(numeric_final))</code></pre>
+<pre class="r"><code>cor_outlier = cor(numeric_final)
+cor_without = cor(numeric_final[-outliers, ])
+cor_difference = cor_outlier - cor_without
+
+cor_difference</code></pre>
 <pre><code>##                        Citations per document expected_schooling mean_schooling
-## Citations per document             1.00000000         0.23951641     0.23065602
-## expected_schooling                 0.23951641         1.00000000     0.77199940
-## mean_schooling                     0.23065602         0.77199940     1.00000000
-## GDP_share                         -0.04790576         0.27439275     0.17181086
-## primary_water                      0.30038200         0.71874152     0.73798889
-## upper_secondary_water              0.16488376         0.55382166     0.51987933
-## lower_secondary_water              0.21254607         0.61355042     0.55997459
-## mean_rights                        0.40275204         0.39321137     0.34390950
-## density_per_km                     0.28229446         0.08118051     0.06929645
+## Citations per document             0.00000000       -0.029151970  -0.0237549724
+## expected_schooling                -0.02915197        0.000000000   0.0200708778
+## mean_schooling                    -0.02375497        0.020070878   0.0000000000
+## GDP_share                         -0.04549161       -0.066268236  -0.0705552357
+## primary_water                     -0.04311450        0.028888321   0.0074175565
+## upper_secondary_water             -0.13300854        0.012008975  -0.0633049329
+## lower_secondary_water             -0.14946152        0.005515231  -0.0558978526
+## mean_rights                        0.04093102        0.004012207   0.0008150399
+## density_per_km                     0.09511059        0.133968528   0.1161720845
 ##                          GDP_share primary_water upper_secondary_water
-## Citations per document -0.04790576     0.3003820             0.1648838
-## expected_schooling      0.27439275     0.7187415             0.5538217
-## mean_schooling          0.17181086     0.7379889             0.5198793
-## GDP_share               1.00000000     0.2799542             0.3082511
-## primary_water           0.27995425     1.0000000             0.7969224
-## upper_secondary_water   0.30825114     0.7969224             1.0000000
-## lower_secondary_water   0.31320028     0.8679920             0.9281405
-## mean_rights             0.21369015     0.3195043             0.2162556
-## density_per_km         -0.18835795     0.1110593             0.1018231
-##                        lower_secondary_water mean_rights density_per_km
-## Citations per document             0.2125461  0.40275204     0.28229446
-## expected_schooling                 0.6135504  0.39321137     0.08118051
-## mean_schooling                     0.5599746  0.34390950     0.06929645
-## GDP_share                          0.3132003  0.21369015    -0.18835795
-## primary_water                      0.8679920  0.31950433     0.11105933
-## upper_secondary_water              0.9281405  0.21625558     0.10182308
-## lower_secondary_water              1.0000000  0.23704397     0.11636185
-## mean_rights                        0.2370440  1.00000000     0.05369274
-## density_per_km                     0.1163619  0.05369274     1.00000000</code></pre>
-<pre class="r"><code>cat(&quot;\n\nWithout outliers:\n&quot;)</code></pre>
-<pre><code>## 
-## 
-## Without outliers:</code></pre>
-<pre class="r"><code>print(cor(numeric_final[-outliers, ]))</code></pre>
-<pre><code>##                        Citations per document expected_schooling mean_schooling
-## Citations per document            1.000000000         0.26866838     0.25441099
-## expected_schooling                0.268668376         1.00000000     0.75192852
-## mean_schooling                    0.254410994         0.75192852     1.00000000
-## GDP_share                        -0.002414146         0.34066098     0.24236609
-## primary_water                     0.343496497         0.68985320     0.73057134
-## upper_secondary_water             0.297892304         0.54181268     0.58318426
-## lower_secondary_water             0.362007596         0.60803519     0.61587244
-## mean_rights                       0.361821023         0.38919917     0.34309446
-## density_per_km                    0.187183873        -0.05278802    -0.04687563
-##                           GDP_share primary_water upper_secondary_water
-## Citations per document -0.002414146    0.34349650             0.2978923
-## expected_schooling      0.340660981    0.68985320             0.5418127
-## mean_schooling          0.242366093    0.73057134             0.5831843
-## GDP_share               1.000000000    0.33119150             0.3374106
-## primary_water           0.331191503    1.00000000             0.8493160
-## upper_secondary_water   0.337410647    0.84931597             1.0000000
-## lower_secondary_water   0.351922026    0.91378003             0.9507417
-## mean_rights             0.243350039    0.30762105             0.2360581
-## density_per_km         -0.136152012    0.08506987             0.0810570
-##                        lower_secondary_water mean_rights density_per_km
-## Citations per document             0.3620076  0.36182102     0.18718387
-## expected_schooling                 0.6080352  0.38919917    -0.05278802
-## mean_schooling                     0.6158724  0.34309446    -0.04687563
-## GDP_share                          0.3519220  0.24335004    -0.13615201
-## primary_water                      0.9137800  0.30762105     0.08506987
-## upper_secondary_water              0.9507417  0.23605810     0.08105700
-## lower_secondary_water              1.0000000  0.25990256     0.12807557
-## mean_rights                        0.2599026  1.00000000    -0.02018716
-## density_per_km                     0.1280756 -0.02018716     1.00000000</code></pre>
+## Citations per document -0.04549161  -0.043114498           -0.13300854
+## expected_schooling     -0.06626824   0.028888321            0.01200897
+## mean_schooling         -0.07055524   0.007417556           -0.06330493
+## GDP_share               0.00000000  -0.051237255           -0.02915951
+## primary_water          -0.05123726   0.000000000           -0.05239355
+## upper_secondary_water  -0.02915951  -0.052393550            0.00000000
+## lower_secondary_water  -0.03872174  -0.045788040           -0.02260115
+## mean_rights            -0.02965989   0.011883282           -0.01980252
+## density_per_km         -0.05220594   0.025989466            0.02076608
+##                        lower_secondary_water   mean_rights density_per_km
+## Citations per document          -0.149461523  0.0409310174     0.09511059
+## expected_schooling               0.005515231  0.0040122067     0.13396853
+## mean_schooling                  -0.055897853  0.0008150399     0.11617208
+## GDP_share                       -0.038721742 -0.0296598885    -0.05220594
+## primary_water                   -0.045788040  0.0118832820     0.02598947
+## upper_secondary_water           -0.022601150 -0.0198025227     0.02076608
+## lower_secondary_water            0.000000000 -0.0228585898    -0.01171372
+## mean_rights                     -0.022858590  0.0000000000     0.07387990
+## density_per_km                  -0.011713718  0.0738799001     0.00000000</code></pre>
+<pre class="r"><code>#mostly changes cor between citations and water
+#also changes density with schooling, probably because of singapore</code></pre>
 
 
 
