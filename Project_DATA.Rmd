@@ -17,6 +17,7 @@ library(jsonlite)
 library(readxl)
 library(psych)   
 library(ggplot2)
+library(corrplot)
 
 df_1 <- read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
 
@@ -99,7 +100,7 @@ ggplot(data = final, aes(x = Entity, y = `Density..per.km..`)) +
 
 
 
-corrplot(cor(final, use = "complete.obs"), method = "square")
+corrplot(cor(numeric_final, use = "complete.obs"), method = "square")
 
 ```
 
