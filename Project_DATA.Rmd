@@ -63,6 +63,9 @@ final = df_13 %>%
   drop_na() %>%
    dplyr::select(-Code, -Year, -time.1, -time, -owid_region, -civ_libs_vdem__estimate_best)
 
+final = final %>%
+  rename(expected_schooling = eys__sex_total, mean_schooling = mys__sex_total, GDP_share = combined_expenditure_share_gdp, primary_water = X_4_a_1__se_acs_h2o__primary, upper_secondary_water = X_4_a_1__se_acs_h2o__upper_secondary, lower_secondary_water = X_4_a_1__se_acs_h2o__lower_secondary, mean_rights = mean_human_rights, density_per_km = Density..per.km..)
+
 final
 
 
@@ -80,27 +83,29 @@ describe(final)
 
 ggplot(data = final, aes(x = Entity, y = `Citations per document`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `eys__sex_total`)) +
+ggplot(data = final, aes(x = Entity, y = `expected_schooling`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `mys__sex_total`)) +
+ggplot(data = final, aes(x = Entity, y = `mean_schooling`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `combined_expenditure_share_gdp`)) +
+ggplot(data = final, aes(x = Entity, y = `GDP_share`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `X_4_a_1__se_acs_h2o__primary`)) +
+ggplot(data = final, aes(x = Entity, y = `primary_water`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `X_4_a_1__se_acs_h2o__lower_secondary`)) +
+ggplot(data = final, aes(x = Entity, y = `lower_secondary_water`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `X_4_a_1__se_acs_h2o__upper_secondary`)) +
+ggplot(data = final, aes(x = Entity, y = `upper_secondary_water`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `mean_human_rights`)) +
+ggplot(data = final, aes(x = Entity, y = `mean_rights`)) +
   geom_point() 
-ggplot(data = final, aes(x = Entity, y = `Density..per.km..`)) +
+ggplot(data = final, aes(x = Entity, y = `density_per_km`)) +
   geom_point() 
 
 
 
 
 corrplot(cor(numeric_final, use = "complete.obs"), method = "square")
+
+
 
 ```
 
