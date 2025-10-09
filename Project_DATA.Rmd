@@ -86,6 +86,9 @@ final %>%
   facet_wrap(~variable, scales = "free") +
   theme_minimal()
 
+
+corrplot(cor(final, use = "complete.obs"), method = "square")
+
 ```
 
 
