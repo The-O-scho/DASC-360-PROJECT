@@ -73,7 +73,6 @@ final
 ```
 
 ```{r}
-<<<<<<< HEAD
 numeric_final = final[,-c(1)]
 
 summary(numeric_final)
@@ -89,9 +88,6 @@ final %>%
   facet_wrap(~variable, scales = "free") +
   theme_minimal()
 
-=======
-describe(final)
->>>>>>> b57e9e6514c32ced5426dfb7f0561c37e0558c2a
 ```
 
 
