@@ -80,6 +80,7 @@ final
 numeric_final = final[,-c(1)]
 
 describe(final)
+#Group by Entity/ Country and find all plots
 
 ggplot(data = final, aes(x = Entity, y = `Citations per document`)) +
   geom_point() 
