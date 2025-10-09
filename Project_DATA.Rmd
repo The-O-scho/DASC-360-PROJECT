@@ -15,6 +15,8 @@ library(tidyverse)
 library(dplyr)
 library(jsonlite)
 library(readxl)
+library(psych)   
+library(ggplot2)
 
 df_1 <- read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
 
@@ -42,7 +44,7 @@ df_7 = read_excel("publications.xlsx")
 df_7 = df_7 %>%
   rename(Entity = Country) 
 
-df_7 = df_7[,"Citations per document"]
+df_7 = df_7[,c("Entity","Citations per document")]
 #load up on economic data to predict mys
 #gini index wealth disparity
 
@@ -64,7 +66,20 @@ final
 ```
 
 ```{r}
+numeric_final = final[,-c(1)]
 
+summary(numeric_final)
+
+sd(numeric_final$`Citations per document`)
+
+# Dot plots for each numeric variable
+final %>%
+  select(where(is.numeric)) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "value") %>%
+  ggplot(aes(x = value)) +
+  geom_dotplot(binwidth = 1) +
+  facet_wrap(~variable, scales = "free") +
+  theme_minimal()
 
 ```
 
