@@ -77,7 +77,10 @@ numeric_final = final[,-c(1)]
 
 summary(numeric_final)
 
-sd(numeric_final$`Citations per document`)
+standard_deviation = sapply(numeric_final, sd)
+standard_deviation
+
+
 
 # Dot plots for each numeric variable
 final %>%
