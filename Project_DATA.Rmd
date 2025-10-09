@@ -63,9 +63,17 @@ final = df_13 %>%
    dplyr::select(-Code, -Year, -time.1, -time, -owid_region, -civ_libs_vdem__estimate_best)
 
 final
+
+
+# Visualize and use describe() to present descriptive statistics for each dimension
+
+# Visualize and summarize the covariability between each pair of dimensions
+
+# Identify potential two-dimensional outliers and investigate their influence
 ```
 
 ```{r}
+<<<<<<< HEAD
 numeric_final = final[,-c(1)]
 
 summary(numeric_final)
@@ -81,6 +89,9 @@ final %>%
   facet_wrap(~variable, scales = "free") +
   theme_minimal()
 
+=======
+describe(final)
+>>>>>>> b57e9e6514c32ced5426dfb7f0561c37e0558c2a
 ```
 
 
