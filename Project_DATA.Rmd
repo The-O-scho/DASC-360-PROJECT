@@ -75,12 +75,7 @@ final
 ```{r}
 numeric_final = final[,-c(1)]
 
-summary(numeric_final)
-
-standard_deviation = sapply(numeric_final, sd)
-standard_deviation
-
-
+describe(final)
 
 # Dot plots for each numeric variable
 final %>%
