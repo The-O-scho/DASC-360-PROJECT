@@ -71,8 +71,7 @@ final
 ```
 
 ```{r}
-
-
+describe(final)
 ```
 
 
