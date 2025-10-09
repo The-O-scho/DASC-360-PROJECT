@@ -19,15 +19,15 @@ library(psych)
 library(ggplot2)
 library(corrplot)
 
-df_1 <- read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
+df_1 = read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
 
-df_2 <- read.csv("https://ourworldindata.org/grapher/average-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA~MEX~RUS~CHN~GBR~IRL~ISL~AND~ESP~FRA~DEU~DNK~NLD~ITA~BFA~RWA~COD~ZAF~SOM~TCD~DZA~MLI~AUS~PNG~NZL~BRA~PER~COL~NOR~FIN~SWE&overlay=download-data")
+df_2 = read.csv("https://ourworldindata.org/grapher/average-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA~MEX~RUS~CHN~GBR~IRL~ISL~AND~ESP~FRA~DEU~DNK~NLD~ITA~BFA~RWA~COD~ZAF~SOM~TCD~DZA~MLI~AUS~PNG~NZL~BRA~PER~COL~NOR~FIN~SWE&overlay=download-data")
 
-df_3 <- read.csv("https://ourworldindata.org/grapher/total-government-expenditure-on-education-gdp.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA&overlay=download-data")
+df_3 = read.csv("https://ourworldindata.org/grapher/total-government-expenditure-on-education-gdp.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA&overlay=download-data")
 
-df_4 <- read.csv("https://ourworldindata.org/grapher/schools-access-drinking-water.csv?v=1&csvType=full&useColumnShortNames=true")
+df_4 = read.csv("https://ourworldindata.org/grapher/schools-access-drinking-water.csv?v=1&csvType=full&useColumnShortNames=true")
 
-df_5 <- read.csv("https://ourworldindata.org/grapher/human-rights-index-vdem.csv?v=1&csvType=full&useColumnShortNames=true")
+df_5 = read.csv("https://ourworldindata.org/grapher/human-rights-index-vdem.csv?v=1&csvType=full&useColumnShortNames=true")
 
 df_5 = df_5 %>%
   group_by(Entity) %>%
@@ -113,12 +113,89 @@ cor(numeric_final)
 ```
 
 ```{r}
+mahalanobis_distances = mahalanobis(numeric_final, colMeans(numeric_final), cov(numeric_final))
+df = ncol(numeric_final)
+cutoff_value = qchisq(1 - 0.05, df)
 
+outliers = which(mahalanobis_distances > cutoff_value)
+outliers
+```
 
+```{r}
 
+final[c(9,33,51,56,57,60,62,74,75), ]
+
+colMeans(numeric_final)
+
+# Creating comparison dataframe
+
+# bounds
+mean_vals = colMeans(numeric_final)
+sd_vals = apply(numeric_final, 2, sd)
+upper_bound = mean_vals + 2 * sd_vals
+lower_bound = mean_vals - 2 * sd_vals
+
+# Create comparison with bounds
+comparison = rbind(numeric_final[c(9,33,51,56,57,60,62,74,75), ], mean_vals, upper_bound, lower_bound)
+comparison = as.data.frame(comparison)
+rownames(comparison)[10:12] = c("Mean", "Mean+2SD", "Mean-2SD")
+comparison
+view(comparison)
 
 ```
 
+```{r}
+#where outliers are coming from
+
+#1st one is Barbados, 
+#High citations (45.18) + high density (655) + maximum water access + high education
+
+#2 is Honduras
+#Moderate citations but low expected schooling (10.16) relative to other metrics
+#Unusual combination of research output with lower educational expectations
+
+#3 is Mexico 
+#Good expected schooling (14.47) but mixed water access (49-76%)
+#Educational expectations don't match infrastructure reality
+
+#4 Nicaragua
+#severely deficient water infrastructure
+
+#5 Niger
+#Extremely low mean schooling (1.41)
+#moderate expected schooling (8.31) and GDP share (4.07)
+#low pop density (20.69)
+#Huge gap between actual and expected education
+
+#6 Pakistan
+#low GDP share (1.88), as expected low schooling (7.90 (expected), 4.32 (mean) )
+#Poor water access across all levels (28-52%)
+
+#7 Panama
+#Very high citations (38.37) 
+#poor secondary water access (37-46%)
+
+#8 Sierra Leone
+#Massive GDP share (8.54) but low education (9.06, 3.54)
+
+#9 Singapore
+#Extreme density (8416) caused by being a city state
+#high education + high citations
+
+
+#Some of these make sense and should be kept but some are unreasonable and should be throw away, more analysis needed.
+```
+
+```{r}
+cor_outlier = cor(numeric_final)
+cor_without = cor(numeric_final[-outliers, ])
+cor_difference = cor_outlier - cor_without
+
+cor_difference
+
+#mostly changes cor between citations and water
+#also changes density with schooling, probably because of singapore
+```
 
 
 
