@@ -215,7 +215,7 @@ R_predictor = cor(final_matrix_predictor)
 eigen_predictor = eigen(R_predictor)
 
 plot(eigen_response$values, type = "b")
-#No elbow exists
+#1
 plot(eigen_predictor$values, type = "b")
 #1
 
