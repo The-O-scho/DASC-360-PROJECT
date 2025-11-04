@@ -232,7 +232,22 @@ which(eigen_predictor$values > 0.7)
 corrplot(R_response, method="color",order = "hclust")
 corrplot(R_predictor, method="color",order = "hclust")
 
+#Used jolifee write description later
+
 ```
+
+```{r}
+
+
+
+
+
+
+
+
+```
+
+
 
 
 
