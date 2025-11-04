@@ -200,9 +200,37 @@ cor_difference
 
 Start EFA work here
 ```{r}
+#Response varaibles are expected schooling, mean rights, GDP_share [,3], [,5], [,9]
 
+#predictor varaibles are everything else
 
+final_matrix_response = as.matrix(final[,c(3,5,9)])
 
+R_response = cor(final_matrix_response)
+eigen_response = eigen(R_response)
+
+final_matrix_predictor = as.matrix(final[,-c(1,3,5,9)])
+
+R_predictor = cor(final_matrix_predictor)
+eigen_predictor = eigen(R_predictor)
+
+plot(eigen_response$values, type = "b")
+#No elbow exists
+plot(eigen_predictor$values, type = "b")
+#1
+
+which(eigen_response$values > 1)
+#1
+which(eigen_predictor$values > 1)
+#1
+
+which(eigen_response$values > 0.7)
+#2
+which(eigen_predictor$values > 0.7)
+#3
+
+corrplot(R_response, method="color",order = "hclust")
+corrplot(R_predictor, method="color",order = "hclust")
 
 ```
 
