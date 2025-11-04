@@ -236,16 +236,60 @@ corrplot(R_predictor, method="color",order = "hclust")
 
 ```
 
+
 ```{r}
+#Response 
+Response_Rotated_orthogonal_1 = pca(r = R_response, nfactors = 1, rotate = "varimax")$loadings[]
+Response_Rotated_orthogonal_2 = pca(r = R_response, nfactors = 2, rotate = "varimax")$loadings[]
+
+Response_Rotated_oblique_2
+
+Response_Rotated_oblique_1 = pca(r = R_response, nfactors = 1, rotate = "oblimin")$loadings[]
+Response_Rotated_oblique_2 = pca(r = R_response, nfactors = 2, rotate = "oblimin")$loadings[]
+
+Var = colSums(Response_Rotated_orthogonal_1^2/nrow(Response_Rotated_orthogonal_1))
+Var_2 = colSums(Response_Rotated_orthogonal_2^2/nrow(Response_Rotated_orthogonal_2))
+Var_2[1]+Var_2[2]
+
+
+#Predictor
+Predictor_Rotated_orthogonal_1 = pca(r = R_response, nfactors = 1, rotate = "varimax")$loadings[]
+Predictor_Rotated_orthogonal_3 = pca(r = R_response, nfactors = 3, rotate = "varimax")$loadings[]
 
 
 
+Predictor_Rotated_oblique_1 = pca(r = R_response, nfactors = 1, rotate = "oblimin")$loadings[]
+Predictor_Rotated_oblique_3 = pca(r = R_response, nfactors = 3, rotate = "oblimin")$loadings[]
+
+Predictor_Rotated_oblique_3
+
+Var = colSums(Predictor_Rotated_orthogonal_1^2/nrow(Predictor_Rotated_orthogonal_1))
+Var_2 = colSums(Predictor_Rotated_orthogonal_3^2/nrow(Predictor_Rotated_orthogonal_3))
+Var
+Var_2[1]+Var_2[2]
 
 
 
+#Use Jolifee, and oblique for both
+
+```
+
+```{r}
+Response_Rotated_oblique_2
+Predictor_Rotated_oblique_3
+
+Var_response_olbiqe = colSums(Response_Rotated_oblique_2^2/nrow(Response_Rotated_oblique_2))
+Var_Predictor_olbiqe = colSums(Predictor_Rotated_oblique_3^2/nrow(Predictor_Rotated_oblique_3))
+
+Var_response_olbiqe
+Var_Predictor_olbiqe
 
 
 ```
+
+
+
+
 
 
 
