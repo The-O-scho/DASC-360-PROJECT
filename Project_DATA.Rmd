@@ -198,5 +198,14 @@ cor_difference
 ```
 
 
+Start EFA work here
+```{r}
+
+
+
+
+```
+
+
 
 
