@@ -295,13 +295,3 @@ A_resid_predictor
 # Next we calculated the total variance explained for both our response and predictor variables. The results showed that approximately 80% of the variance in the response variables and 88% of the variance in the predictor variables were retained.This confirms that our factor model fits the data well and that the orthogonal rotation was an appropriate choice for summarizing the underlying patterns in both response and predictor variables.
 
 ```
-
-
-
-
-
-
-
-
-
-
