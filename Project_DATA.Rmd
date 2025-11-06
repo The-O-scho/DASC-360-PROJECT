@@ -232,7 +232,7 @@ which(eigen_predictor$values > 0.7)
 corrplot(R_response, method="color",order = "hclust")
 corrplot(R_predictor, method="color",order = "hclust")
 
-#Used jolifee write description later
+# We plotted the eigenvalues for both the predictor and response variable sets. In both scree plots there was a clear elbow after the first factor, suggesting an intrinsic dimemonallity of one. Next we applied both Jolliffe and Kaiser's criterion. Using Kaiser’s criterion (eigenvalues > 1), we found one factor for the response variables and two for the predictors. Jolliffe’s criterion (eigenvalues > 0.7) suggested two factors for the response variables and three for the predictors. To decide what criterion would fit our data the best we then looked at the correlation plots. The correlation plots showed the response variables formed two moderately correlated clusters, while the predictor variables showed three distinct clusters. Because Jolliffe’s criterion aligned more closely with these observed patterns, we decided to use Jolliffe’s criterion. 
 
 ```
 
@@ -268,7 +268,7 @@ Var_2
 
 
 
-#Use Jolifee, and oblique for both
+# Using Jolifee's criterion, we then used pca to decide what rotation would best simplify our data. The orthogonal rotation provided more interpretable factor loading for both sets. In the response variables, each variable loaded strongly on a single factor. For the predictor variables, the orthogonal rotation also separated the variables more clearly while keeping cross-loadings minimal. Therefore we chose the orthogonal rotation.
 
 ```
 
@@ -292,7 +292,7 @@ R_hat_predictor = Predictor_Rotated_orthogonal_3 %*% t(Predictor_Rotated_orthogo
 A_resid_predictor = R_predictor - R_hat_predictor
 A_resid_predictor
 
-
+# Next we calculated the total variance explained for both our response and predictor variables. The results showed that approximately 80% of the variance in the response variables and 88% of the variance in the predictor variables were retained.This confirms that our factor model fits the data well and that the orthogonal rotation was an appropriate choice for summarizing the underlying patterns in both response and predictor variables.
 
 ```
 
