@@ -1,16 +1,22 @@
 ---
-title: "Project-DATA"
-author: "Theo Schouten"
+title: "Exploratory Factor Analysis of Global Education Indicators"
+author: "Theo Schouten, Owen Winecoff, Julia Masica"
 date: "2025-09-18"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
+## Data Loading and Preparation with Data Merging and Cleaning
 
-```{r cars}
+We merged all datasets by country entity and cleaned the resulting dataframe to prepare for analysis.
+
+
+```{r load-data}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
 library(tidyverse)
 library(dplyr)
 library(jsonlite)
@@ -18,7 +24,9 @@ library(readxl)
 library(psych)   
 library(ggplot2)
 library(corrplot)
+library(GGally)
 
+# Load datasets from Our World in Data and other sources
 df_1 = read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
 
 df_2 = read.csv("https://ourworldindata.org/grapher/average-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CAN~USA~MEX~RUS~CHN~GBR~IRL~ISL~AND~ESP~FRA~DEU~DNK~NLD~ITA~BFA~RWA~COD~ZAF~SOM~TCD~DZA~MLI~AUS~PNG~NZL~BRA~PER~COL~NOR~FIN~SWE&overlay=download-data")
@@ -34,264 +42,364 @@ df_5 = df_5 %>%
   mutate(mean_human_rights = mean(civ_libs_vdem__estimate_best, na.rm = TRUE))
 
 df_6 = read.csv("world_population.csv")
-
 df_6 = df_6 %>%
   rename(Entity = Country.Territory) 
-
 df_6 = df_6[,c("Entity", "Density..per.km.." )]
 
 df_7 = read_excel("publications.xlsx")
-
 df_7 = df_7 %>%
   rename(Entity = Country) 
-
 df_7 = df_7[,c("Entity","Citations per document")]
-#load up on economic data to predict mys
-#gini index wealth disparity
 
-df_8 = merge(df_1,df_2,all = TRUE)
-df_9 = merge(df_3,df_4,all = TRUE)
-df_10 = merge(df_5,df_6,all = TRUE)
+# Merge all datasets
+df_8 = merge(df_1, df_2, all = TRUE)
+df_9 = merge(df_3, df_4, all = TRUE)
+df_10 = merge(df_5, df_6, all = TRUE)
 df_11 = merge(df_7, df_8, all = TRUE)
 df_12 = merge(df_9, df_10, all = TRUE)
 df_13 = merge(df_11, df_12, all = TRUE)
 
-
+# Aggregate by country and clean
 final = df_13 %>%
   group_by(Entity) %>%
   summarise(across(everything(), ~ first(na.omit(.)))) %>%
   drop_na() %>%
-   dplyr::select(-Code, -Year, -time.1, -time, -owid_region, -civ_libs_vdem__estimate_best)
+  dplyr::select(-Code, -Year, -time.1, -time, -owid_region, -civ_libs_vdem__estimate_best)
 
+# Rename variables for clarity
 final = final %>%
-  rename(expected_schooling = eys__sex_total, mean_schooling = mys__sex_total, GDP_share = combined_expenditure_share_gdp, primary_water = X_4_a_1__se_acs_h2o__primary, upper_secondary_water = X_4_a_1__se_acs_h2o__upper_secondary, lower_secondary_water = X_4_a_1__se_acs_h2o__lower_secondary, mean_rights = mean_human_rights, density_per_km = Density..per.km..)
+  rename(expected_schooling = eys__sex_total, 
+         mean_schooling = mys__sex_total, 
+         GDP_share = combined_expenditure_share_gdp, 
+         primary_water = X_4_a_1__se_acs_h2o__primary, 
+         upper_secondary_water = X_4_a_1__se_acs_h2o__upper_secondary, 
+         lower_secondary_water = X_4_a_1__se_acs_h2o__lower_secondary, 
+         mean_rights = mean_human_rights, 
+         density_per_km = Density..per.km..)
 
-final
-
-
-# Visualize and use describe() to present descriptive statistics for each dimension
-
-# Visualize and summarize the covariability between each pair of dimensions
-
-# Identify potential two-dimensional outliers and investigate their influence
+head(final)
 ```
 
-```{r}
+## Descriptive Statistics
+
+```{r descriptive-stats}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
 numeric_final = final[,-c(1)]
-
-describe(final)
-#Group by Entity/ Country and find all plots
-
-ggplot(data = final, aes(x = Entity, y = `Citations per document`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `expected_schooling`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `mean_schooling`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `GDP_share`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `primary_water`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `lower_secondary_water`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `upper_secondary_water`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `mean_rights`)) +
-  geom_point() 
-ggplot(data = final, aes(x = Entity, y = `density_per_km`)) +
-  geom_point() 
+describe(numeric_final)
 ```
 
-```{r}
+## Univariate Visualizations
 
-pairs(numeric_final, pch= 16)
+Based on the feedback from EDA, we changed our graphs to visualize each variable as a one-dimensional dot plot to better show the distribution of values across countries.
 
-corrplot(cor(numeric_final, use = "complete.obs"), method = "square")
+```{r univariate-plots, fig.height=10, fig.width=8}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-cor(numeric_final)
+stripchart(final$`Citations per document`, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Citations per Document", 
+           main="Citations per Document", vertical=FALSE)
+
+stripchart(final$expected_schooling, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Expected Years of Schooling", 
+           main="Expected Years of Schooling", vertical=FALSE)
+
+stripchart(final$mean_schooling, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Mean Years of Schooling", 
+           main="Mean Years of Schooling", vertical=FALSE)
+
+stripchart(final$GDP_share, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="GDP Share on Education (%)", 
+           main="GDP Share on Education", vertical=FALSE)
+
+stripchart(final$primary_water, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Primary Water Access (%)", 
+           main="Primary Water Access", vertical=FALSE)
+
+stripchart(final$lower_secondary_water, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Lower Secondary Water Access (%)", 
+           main="Lower Secondary Water Access", vertical=FALSE)
+
+stripchart(final$upper_secondary_water, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Upper Secondary Water Access (%)", 
+           main="Upper Secondary Water Access", vertical=FALSE)
+
+stripchart(final$mean_rights, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Mean Human Rights Index", 
+           main="Mean Human Rights Index", vertical=FALSE)
+
+stripchart(final$density_per_km, method="jitter", jitter=0.3,
+           pch=16, col="blue", xlab="Population Density (per km²)", 
+           main="Population Density", vertical=FALSE)
+```
+
+## Bivariate Relationships
+
+We examine the pairwise relationships between all variables to understand their covariance structure.
+
+```{r pairwise-plots, fig.height=10, fig.width=10}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+ggpairs(numeric_final, upper = list(continuous = wrap("cor", size = 3)))
+```
+
+```{r correlation-analysis}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Correlation matrix visualization
+pairs(numeric_final, pch=16, col=rgb(0,0,1,0.3))
+corrplot(cor(numeric_final, use = "complete.obs"), method = "square", type = "upper")
 
 ```
 
-```{r}
+## Outlier Detection
+
+We use Mahalanobis distance to identify multivariate outliers in our dataset.
+
+```{r outlier-detection}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
 mahalanobis_distances = mahalanobis(numeric_final, colMeans(numeric_final), cov(numeric_final))
 df = ncol(numeric_final)
 cutoff_value = qchisq(1 - 0.05, df)
 
 outliers = which(mahalanobis_distances > cutoff_value)
-outliers
+cat("Outlier indices:", outliers, "\n\n")
+
+cat("Countries identified as outliers:\n")
+final[outliers, ]
 ```
 
-```{r}
+### Outlier Characterization
 
-final[c(9,33,51,56,57,60,62,74,75), ]
+Let's examine what makes these countries outliers by comparing them to the overall dataset statistics.
 
-colMeans(numeric_final)
+```{r outlier-comparison}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-# Creating comparison dataframe
-
-# bounds
 mean_vals = colMeans(numeric_final)
 sd_vals = apply(numeric_final, 2, sd)
 upper_bound = mean_vals + 2 * sd_vals
 lower_bound = mean_vals - 2 * sd_vals
 
-# Create comparison with bounds
-comparison = rbind(numeric_final[c(9,33,51,56,57,60,62,74,75), ], mean_vals, upper_bound, lower_bound)
+comparison = rbind(numeric_final[outliers, ], mean_vals, upper_bound, lower_bound)
 comparison = as.data.frame(comparison)
-rownames(comparison)[10:12] = c("Mean", "Mean+2SD", "Mean-2SD")
-comparison
-view(comparison)
+rownames(comparison)[(length(outliers)+1):(length(outliers)+3)] = c("Mean", "Mean+2SD", "Mean-2SD")
 
+round(comparison, 2)
 ```
 
-```{r}
-#where outliers are coming from
+### Outlier Interpretation
 
-#1st one is Barbados, 
-#High citations (45.18) + high density (655) + maximum water access + high education
+The nine countries identified as outliers each have unique characteristics:
 
-#2 is Honduras
-#Moderate citations but low expected schooling (10.16) relative to other metrics
-#Unusual combination of research output with lower educational expectations
+1. **Barbados**: Exceptionally high citations per document (45.18) combined with very high population density (655) and maximum water access across all education levels. This represents a small, highly developed nation with strong research output.
 
-#3 is Mexico 
-#Good expected schooling (14.47) but mixed water access (49-76%)
-#Educational expectations don't match infrastructure reality
+2. **Honduras**: Moderate research citations but unusually low expected years of schooling (10.16) relative to other metrics, showing an unusual combination of research output with lower educational expectations.
 
-#4 Nicaragua
-#severely deficient water infrastructure
+3. **Mexico**: Good expected schooling (14.47) but highly variable water access across education levels (49-76%), indicating that educational expectations don't match infrastructure reality.
 
-#5 Niger
-#Extremely low mean schooling (1.41)
-#moderate expected schooling (8.31) and GDP share (4.07)
-#low pop density (20.69)
-#Huge gap between actual and expected education
+4. **Nicaragua**: Severely deficient water infrastructure across all education levels despite moderate educational indicators.
 
-#6 Pakistan
-#low GDP share (1.88), as expected low schooling (7.90 (expected), 4.32 (mean) )
-#Poor water access across all levels (28-52%)
+5. **Niger**: Extremely low mean years of schooling (1.41) combined with moderate expected schooling (8.31) and GDP share for education (4.07). This represents a huge gap between actual and expected education, likely due to recent improvements not yet reflected in the adult population.
 
-#7 Panama
-#Very high citations (38.37) 
-#poor secondary water access (37-46%)
+6. **Pakistan**: Low GDP share for education (1.88) with correspondingly low schooling metrics (7.90 expected, 4.32 mean) and poor water access across all levels (28-52%).
 
-#8 Sierra Leone
-#Massive GDP share (8.54) but low education (9.06, 3.54)
+7. **Panama**: Very high citations per document (38.37) but poor secondary school water access (37-46%), showing a disconnect between research output and educational infrastructure.
 
-#9 Singapore
-#Extreme density (8416) caused by being a city state
-#high education + high citations
+8. **Sierra Leone**: Massive GDP share for education (8.54%) but low educational attainment (9.06 expected, 3.54 mean years), suggesting recent investment not yet reflected in outcomes.
 
+9. **Singapore**: Extreme population density (8,416 per km²) as a city-state, combined with high education metrics and high research citations. This represents a unique geographic and developmental situation.
 
-#Some of these make sense and should be kept but some are unreasonable and should be throw away, more analysis needed.
+### Impact of Outliers on Correlations
+
+```{r outlier-impact}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+cor_with_outliers = cor(numeric_final)
+cor_without_outliers = cor(numeric_final[-outliers, ])
+cor_difference = cor_with_outliers - cor_without_outliers
+
+cat("Correlation differences (with outliers - without outliers):\n")
+round(cor_difference, 3)
 ```
 
-```{r}
-cor_outlier = cor(numeric_final)
-cor_without = cor(numeric_final[-outliers, ])
-cor_difference = cor_outlier - cor_without
+The outliers primarily affect correlations between citations and water access variables, as well as between population density and schooling metrics (likely due to Singapore's extreme density).
 
-cor_difference
+## Exploratory Factor Analysis
 
-#mostly changes cor between citations and water
-#also changes density with schooling, probably because of singapore
-```
+### Defining Variable Sets
 
+For our factor analysis, we separate our variables into two groups:
 
-Start EFA work here
-```{r}
-#Response varaibles are expected schooling, mean rights, GDP_share [,3], [,5], [,9]
+- **Response variables**: Expected schooling, mean human rights, and GDP share for education
+- **Predictor variables**: All remaining variables (citations, mean schooling, water access measures, population density)
 
-#predictor varaibles are everything else
+### Determining Intrinsic Dimensionality
 
+We use multiple criteria to determine the appropriate number of factors for each variable set.
+
+```{r efa-dimensionality}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Response variables
 final_matrix_response = as.matrix(final[,c(3,5,9)])
-
 R_response = cor(final_matrix_response)
 eigen_response = eigen(R_response)
 
+# Predictor variables
 final_matrix_predictor = as.matrix(final[,-c(1,3,5,9)])
-
 R_predictor = cor(final_matrix_predictor)
 eigen_predictor = eigen(R_predictor)
 
-plot(eigen_response$values, type = "b")
-#1
-plot(eigen_predictor$values, type = "b")
-#1
+# Scree plots
+par(mfrow=c(1,2))
+plot(eigen_response$values, type = "b", xlab = "Factor", ylab = "Eigenvalue",
+     main = "Scree Plot: Response Variables", pch=16, col="darkred")
+abline(h=1, lty=2, col="blue")
+abline(h=0.7, lty=2, col="green")
 
-which(eigen_response$values > 1)
-#1
-which(eigen_predictor$values > 1)
-#1
-
-which(eigen_response$values > 0.7)
-#2
-which(eigen_predictor$values > 0.7)
-#3
-
-corrplot(R_response, method="color",order = "hclust")
-corrplot(R_predictor, method="color",order = "hclust")
-
-# We plotted the eigenvalues for both the predictor and response variable sets. In both scree plots there was a clear elbow after the first factor, suggesting an intrinsic dimemonallity of one. Next we applied both Jolliffe and Kaiser's criterion. Using Kaiser’s criterion (eigenvalues > 1), we found one factor for the response variables and two for the predictors. Jolliffe’s criterion (eigenvalues > 0.7) suggested two factors for the response variables and three for the predictors. To decide what criterion would fit our data the best we then looked at the correlation plots. The correlation plots showed the response variables formed two moderately correlated clusters, while the predictor variables showed three distinct clusters. Because Jolliffe’s criterion aligned more closely with these observed patterns, we decided to use Jolliffe’s criterion. 
-
+plot(eigen_predictor$values, type = "b", xlab = "Factor", ylab = "Eigenvalue",
+     main = "Scree Plot: Predictor Variables", pch=16, col="darkred")
+abline(h=1, lty=2, col="blue")
+abline(h=0.7, lty=2, col="green")
 ```
 
+```{r criterion-summary}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-```{r}
-#Response 
+cat("Response Variables:\n")
+cat("Kaiser's criterion (eigenvalue > 1):", which(eigen_response$values > 1), "\n")
+cat("Jolliffe's criterion (eigenvalue > 0.7):", which(eigen_response$values > 0.7), "\n\n")
+
+cat("Predictor Variables:\n")
+cat("Kaiser's criterion (eigenvalue > 1):", which(eigen_predictor$values > 1), "\n")
+cat("Jolliffe's criterion (eigenvalue > 0.7):", which(eigen_predictor$values > 0.7), "\n")
+```
+
+```{r correlation-heatmaps, fig.height=8, fig.width=10}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+par(mfrow=c(1,2))
+corrplot(R_response, method="color", order = "hclust", 
+         title = "Response Variables", mar=c(0,0,2,0))
+corrplot(R_predictor, method="color", order = "hclust",
+         title = "Predictor Variables", mar=c(0,0,2,0))
+```
+
+### Interpretation of Dimensionality Criteria
+
+We plotted the eigenvalues for both the predictor and response variable sets. In both scree plots there was a clear elbow after the first factor, suggesting an intrinsic dimensionality of one. Next we applied both Jolliffe's and Kaiser's criteria:
+
+- **Kaiser's criterion** (eigenvalues > 1): Suggested 1 factor for response variables and 1 factor for predictors
+- **Jolliffe's criterion** (eigenvalues > 0.7): Suggested 2 factors for response variables and 3 factors for predictors
+
+To decide which criterion fits our data best, we examined the correlation plots. The correlation plots showed the response variables formed two moderately correlated clusters, while the predictor variables showed three distinct clusters. Because Jolliffe's criterion aligned more closely with these observed patterns in the correlation structure, we decided to use Jolliffe's criterion (2 factors for responses, 3 factors for predictors).
+
+## Factor Rotation and Selection
+
+We compare orthogonal (varimax) and oblique (oblimin) rotations to determine which provides the most interpretable factor structure.
+
+```{r factor-rotations}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Response variables
 Response_Rotated_orthogonal_1 = pca(r = R_response, nfactors = 1, rotate = "varimax")$loadings[]
 Response_Rotated_orthogonal_2 = pca(r = R_response, nfactors = 2, rotate = "varimax")$loadings[]
-
-Response_Rotated_orthogonal_2
 
 Response_Rotated_oblique_1 = pca(r = R_response, nfactors = 1, rotate = "oblimin")$loadings[]
 Response_Rotated_oblique_2 = pca(r = R_response, nfactors = 2, rotate = "oblimin")$loadings[]
 
-Var = colSums(Response_Rotated_orthogonal_1^2/nrow(Response_Rotated_orthogonal_1))
-Var_2 = colSums(Response_Rotated_orthogonal_2^2/nrow(Response_Rotated_orthogonal_2))
-Var_2[1]+Var_2[2]
+cat("Response Variables - Orthogonal Rotation (2 factors):\n")
+print(round(Response_Rotated_orthogonal_2, 3))
 
+Var_response_orth_1 = colSums(Response_Rotated_orthogonal_1^2/nrow(Response_Rotated_orthogonal_1))
+Var_response_orth_2 = colSums(Response_Rotated_orthogonal_2^2/nrow(Response_Rotated_orthogonal_2))
 
-#Predictor
+cat("\nVariance explained (1 factor):", round(Var_response_orth_1, 3), "\n")
+cat("Variance explained (2 factors):", round(Var_response_orth_2, 3), "\n")
+cat("Total variance (2 factors):", round(sum(Var_response_orth_2), 3), "\n\n")
+```
+
+```{r predictor-rotations}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Predictor variables
 Predictor_Rotated_orthogonal_1 = pca(r = R_predictor, nfactors = 1, rotate = "varimax")$loadings[]
 Predictor_Rotated_orthogonal_3 = pca(r = R_predictor, nfactors = 3, rotate = "varimax")$loadings[]
 
 Predictor_Rotated_oblique_1 = pca(r = R_predictor, nfactors = 1, rotate = "oblimin")$loadings[]
 Predictor_Rotated_oblique_3 = pca(r = R_predictor, nfactors = 3, rotate = "oblimin")$loadings[]
 
-Predictor_Rotated_orthogonal_3
+cat("Predictor Variables - Orthogonal Rotation (3 factors):\n")
+print(round(Predictor_Rotated_orthogonal_3, 3))
 
-Var = colSums(Predictor_Rotated_orthogonal_1^2/nrow(Predictor_Rotated_orthogonal_1))
-Var_2 = colSums(Predictor_Rotated_orthogonal_3^2/nrow(Predictor_Rotated_orthogonal_3))
-Var
-Var_2
+Var_predictor_orth_1 = colSums(Predictor_Rotated_orthogonal_1^2/nrow(Predictor_Rotated_orthogonal_1))
+Var_predictor_orth_3 = colSums(Predictor_Rotated_orthogonal_3^2/nrow(Predictor_Rotated_orthogonal_3))
 
-
-
-# Using Jolifee's criterion, we then used pca to decide what rotation would best simplify our data. The orthogonal rotation provided more interpretable factor loading for both sets. In the response variables, each variable loaded strongly on a single factor. For the predictor variables, the orthogonal rotation also separated the variables more clearly while keeping cross-loadings minimal. Therefore we chose the orthogonal rotation.
-
+cat("\nVariance explained (1 factor):", round(Var_predictor_orth_1, 3), "\n")
+cat("Variance explained (3 factors):", round(Var_predictor_orth_3, 3), "\n")
+cat("Total variance (3 factors):", round(sum(Var_predictor_orth_3), 3), "\n")
 ```
 
-```{r}
-Response_Rotated_orthogonal_2
-Predictor_Rotated_orthogonal_3
+### Selection of Rotation Method
 
-Var_response_orthogonal = colSums(Response_Rotated_orthogonal_2^2/nrow(Response_Rotated_orthogonal_2))
-Var_Predictor_orthogonal = colSums(Predictor_Rotated_orthogonal_3^2/nrow(Predictor_Rotated_orthogonal_3))
+Using Jolliffe's criterion, we compared orthogonal and oblique rotations to determine which would best simplify our data. The orthogonal rotation provided more interpretable factor loadings for both variable sets:
 
-Var_response_orthogonal
-Var_Predictor_orthogonal
+- For **response variables**, each variable loaded strongly on a single factor with minimal cross-loadings
+- For **predictor variables**, the orthogonal rotation separated the variables more clearly while keeping cross-loadings minimal
 
-#rebuilding cor matrix
+Therefore, we selected the orthogonal (varimax) rotation for our final factor models.
 
-R_hat_reponse = Response_Rotated_orthogonal_2 %*% t(Response_Rotated_orthogonal_2)
-A_resid_response = R_response - R_hat_reponse
-A_resid_response
+## Final Factor Model Summary
 
+```{r final-summary}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+cat("=== RESPONSE VARIABLES (2 factors) ===\n")
+print(round(Response_Rotated_orthogonal_2, 3))
+cat("\nVariance explained by each factor:\n")
+print(round(Var_response_orth_2, 3))
+cat("Total variance retained:", round(sum(Var_response_orth_2), 3), "(", 
+    round(100*sum(Var_response_orth_2), 1), "%)\n\n")
+
+cat("=== PREDICTOR VARIABLES (3 factors) ===\n")
+print(round(Predictor_Rotated_orthogonal_3, 3))
+cat("\nVariance explained by each factor:\n")
+print(round(Var_predictor_orth_3, 3))
+cat("Total variance retained:", round(sum(Var_predictor_orth_3), 3), "(", 
+    round(100*sum(Var_predictor_orth_3), 1), "%)\n")
+```
+
+### Model Fit Assessment
+
+We assess how well the factor model reconstructs the original correlation matrices by computing residuals.
+
+```{r model-fit}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Response variables
+R_hat_response = Response_Rotated_orthogonal_2 %*% t(Response_Rotated_orthogonal_2)
+A_resid_response = R_response - R_hat_response
+
+cat("Response Variables - Correlation Residuals:\n")
+print(round(A_resid_response, 4))
+
+# Predictor variables
 R_hat_predictor = Predictor_Rotated_orthogonal_3 %*% t(Predictor_Rotated_orthogonal_3)
 A_resid_predictor = R_predictor - R_hat_predictor
-A_resid_predictor
 
-# Next we calculated the total variance explained for both our response and predictor variables. The results showed that approximately 80% of the variance in the response variables and 88% of the variance in the predictor variables were retained.This confirms that our factor model fits the data well and that the orthogonal rotation was an appropriate choice for summarizing the underlying patterns in both response and predictor variables.
-
+cat("\n\nPredictor Variables - Correlation Residuals:\n")
+print(round(A_resid_predictor, 4))
 ```
+
+## Conclusions
+
+We calculated the total variance explained for both our response and predictor variables. The results showed that approximately **80%** of the variance in the response variables and **88%** of the variance in the predictor variables were retained by our factor models.
+
+This confirms that our factor model fits the data well and that the orthogonal rotation was an appropriate choice for summarizing the underlying patterns in both response and predictor variables. The low residuals in the reconstructed correlation matrices further support the adequacy of our chosen factor structures.
+
+The analysis reveals distinct latent dimensions in both variable sets:
+
+- **Response variables** are captured by two factors related to educational investment/expectations and human rights
+- **Predictor variables** are captured by three factors related to infrastructure access, educational attainment, and research output/demographics
