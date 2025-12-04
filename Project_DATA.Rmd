@@ -408,7 +408,7 @@ The analysis reveals distinct latent dimensions in both variable sets:
 ## Start SEM
 
 ```{r}
-
+knitr::include_graphics("")
 
 ```
 
