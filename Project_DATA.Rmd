@@ -25,6 +25,8 @@ library(psych)
 library(ggplot2)
 library(corrplot)
 library(GGally)
+library(lavaan)
+library(parameters)
 
 # Load datasets from Our World in Data and other sources
 df_1 = read.csv("https://ourworldindata.org/grapher/expected-years-of-schooling.csv?v=1&csvType=filtered&useColumnShortNames=true&mapSelect=CHN~NOR~SWE~FIN~CAN~USA~RUS~DEU~NLD~DNK~IRL~ISL~GBR~ESP~FRA~ITA~MEX~IND~BFA~MLI~DZA~TCD~ZAF~RWA~COD~PRY~BRA~PER~COL~AUS~NZL~PNG~PAK&overlay=download-data")
@@ -408,17 +410,42 @@ The analysis reveals distinct latent dimensions in both variable sets:
 ## Start SEM
 
 ```{r}
-knitr::include_graphics("")
+knitr::include_graphics("PS Path.drawio.png")
 
 ```
 
 ```{r}
+numeric_final = numeric_final %>%
+  rename(Citationperdocument = `Citations per document`,
+         population_density = density_per_km)
+```
 
+```{r}
+EQN = '
+  # Measurement Model (Factor Definition)
+  CitationPerDocument =~ Citationperdocument   
+  HumanDevelopment =~ mean_rights + expected_schooling
+  Mean_Schooling_Water =~ primary_water + upper_secondary_water + lower_secondary_water 
+  
+  # Measurement Model (Covariances)
+  CitationPerDocument ~~ mean_schooling
+  Mean_Schooling_Water ~~ mean_schooling
+  
+  # Structural Model
+  HumanDevelopment ~ population_density  + CitationPerDocument + Mean_Schooling_Water
+  GDP_share ~ population_density  + CitationPerDocument + Mean_Schooling_Water
+'
+
+MOD = sem(model = EQN, sample.cov = cor(numeric_final), sample.nobs = 95)
+MOD
+
+degrees_of_freedom(MOD)
 
 ```
 
 ```{r}
-
+params = parameterEstimates(MOD)
+params
 
 ```
 
