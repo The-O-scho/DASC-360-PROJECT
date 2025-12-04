@@ -439,13 +439,19 @@ EQN = '
 MOD = sem(model = EQN, sample.cov = cor(numeric_final), sample.nobs = 95)
 MOD
 
-degrees_of_freedom(MOD)
+fitMeasures(MOD, "df")
 
 ```
 
 ```{r}
 params = parameterEstimates(MOD)
 params
+
+high_z = params %>%
+  filter(abs(z) > 1.96) %>%
+  arrange(desc(abs(z)))
+
+high_z
 
 ```
 
