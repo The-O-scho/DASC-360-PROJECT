@@ -403,3 +403,39 @@ The analysis reveals distinct latent dimensions in both variable sets:
 
 - **Response variables** are captured by two factors related to educational investment/expectations and human rights
 - **Predictor variables** are captured by three factors related to infrastructure access, educational attainment, and research output/demographics
+
+
+## Start SEM
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+
+
