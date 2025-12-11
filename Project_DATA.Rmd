@@ -628,4 +628,37 @@ The model demonstrates **poor to marginal overall fit** to the data:
 **Overall Assessment:** The current model does **not** fit the data well. Multiple fit indices consistently indicate poor fit, suggesting that our hypothesized relationships do not align well with the observed patterns across countries. Our model may be missing important direct paths, correlated errors, or moderating relationships. Despite finding statistically significant predictors, the overall structural specification requires revision to better capture the complex relationships in global education data. Potential improvements could include reconsidering the factor structure or exploring alternative theoretical frameworks.
 
 
+###Abstract Start
+
+**Abstract:** 
+
+<center>
+
+**Building the Future: Factors of Global Education**
+
+</center>
+
+**Introduction** 
+
+Global Education systems face constant inequalities in resources and infrastructure that impact human development and education. Millions of children around the world are affected by this every day. Understanding the relationships between educational investment, infrastructure quality, and broader developmental outcomes is critical for informing global policy decisions. This study examines multidimensional factors of global education to identify which variables most strongly predict human development and educational investment across many nations. By revealing some of the core forces shaping the state of global education, our study offers guidance to more effective methods of improving education systems and outcomes worldwide. 
+
+**Methods** 
+
+With this in mind, we analyzed data from 95 countries using variables from Our World in Data and other international sources. Response variables included expected years of schooling, human rights index, and GDP share allocated to education. Predictor variables encompassed research citations per document, mean years of schooling, water access across three education levels, and population density. We conducted exploratory factor analysis using multiple criteria to determine intrinsic dimensionality and compare varimax and oblimin rotations. Subsequently, we specified a structural equation model (SEM) to test hypothesized relationships between latent factors and response variables, evaluating model fit using CFI, TLI, RMSEA, and SRMR indices. 
+
+**Results** 
+
+Factor analysis identified two dimensions for response variables with 80% variance explained, and three for predictors with 88% variance explained. Our SEM revealed that water infrastructure access significantly predicted both human development and GDP education share. Population density negatively predicted education investment. However, overall model fit was poor, indicating misspecification. 
+
+ 
+
+**Conclusion** 
+
+Basic educational infrastructure, particularly water access in schools, shows up as the strongest predictor of both human development outcomes and educational investment priorities across countries. This highlights the crucial role of foundational infrastructure in developmental gains, which suggests that global education efforts should prioritize the provision of basic resources. The poor model fit indicates complex relationships that require further analysis to capture and model global education dynamics more appropriately.  
+
+ 
+
+ 
+
+
 
