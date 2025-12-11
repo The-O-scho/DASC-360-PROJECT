@@ -583,11 +583,8 @@ Mean_Schooling_Water is the only variable that significantly predicts Human Deve
 
 **For GDP Share on Education:**
 
-<<<<<<< HEAD
 Two variables significantly predict the percentage of GDP allocated to education. First, Mean_Schooling_Water shows a positive effect (β = 0.285, z = 2.514, p = 0.012), indicating that countries with better water infrastructure in schools tend to invest more of their GDP in education. This suggests a virtuous cycle where infrastructure investment and education funding reinforce each other. Second, population_density shows a negative effect (β = -0.220, z = -2.259, p = 0.024), meaning that more densely populated countries allocate a smaller share of GDP to education. This finding might seem counter intuitive because of dense but rich countries like Singapore, but the general effect is negative because most densely populated countries are poorer and have poorer living qualities unlike singapore, like Bangladesh. 
-=======
-Two predictors significantly affected the percentage of GDP that countries spend on education. First, Mean_Schooling_Water had a positive effect (β = 0.285, z = 2.514, p = 0.012), meaning that countries with better water infrastructure in schools tend to invest a higher share of their GDP in education. This could point to a reinforcing cycle where infrastructure and higher education spending support each other. Second, population_density shows a negative effect (β = -0.220, z = -2.259, p = 0.024). In other words, more densely populated countries appear to spend a smaller percentage of their GDP on education. Although this might seem counterintuitive, one explanation is economies of scale—denser countries may be able to provide education more efficiently, so they don’t need to invest as large of a share. Citation output was not a significant predictor of education spending.
->>>>>>> 06c89b1c5317618bd34e31a1e91713c21518241b
+
 
 ### Model Fit Evaluation
 ```{r fit-assessment}
@@ -614,32 +611,21 @@ cat("- Chi-square p-value > 0.05 = good fit (sensitive to sample size)\n")
 
 The model demonstrates **poor to marginal overall fit** to the data:
 
-<<<<<<< HEAD
+
 - **CFI = 0.802**: This falls below the 0.90 cutoff for an acceptable fit. A CFI of 0.802 indicates that our model explains only 80.2% of the covariance in the data compared to a baseline independence model, suggesting that important relationships or structural elements may be missing from our specification.
-=======
-- **CFI = 0.802**: This is well below the 0.95 threshold for excellent fit and even below the 0.90 cutoff for acceptable fit. A CFI of 0.802 means that our model is explaining about 80.2% of the covariance compared to a baseline independence model. This suggests that some important relationships or structural elements may be missing from our model.
->>>>>>> 06c89b1c5317618bd34e31a1e91713c21518241b
 
 - **TLI = 0.660**: The Tucker-Lewis Index is also far below the acceptable range (< 0.90), which further supports the conclusion that the model fits poorly. This  low TLI value suggests the model may be more complicated than it needs to be without providing much improvement over a simpler version.
 
-<<<<<<< HEAD
+
 - **RMSEA = 0.225** This considerably exceeds the 0.08 cutoff for acceptable fit and even surpasses the 0.10 threshold typically considered poor fit. An RMSEA above 0.20 indicates substantial approximation error, meaning the model does not closely reproduce the observed covariance structure. 
-=======
-- **RMSEA = 0.225** (90% CI: [0.187, 0.264]): This is much higher then the 0.08 cutoff for acceptable fit and even surpasses the 0.10 threshold typically considered poor fit. RMSEA values above 0.20 indicate major approximation error, meaning the model doesn’t match the observed covariance structure very well. The tight confidence interval also shows that this poor fit estimate is precise.
->>>>>>> 06c89b1c5317618bd34e31a1e91713c21518241b
+
 
 - **SRMR = 0.103**: This exceeds the 0.08 threshold for good fit, meaning that standardized residuals are larger than they should be. However, among all the fit indices, this one is the least concerning.
 
 - **Chi-square = 121.720** (df = 21, p < 0.001): The highly significant chi-square test indicates that our model's implied covariance matrix differs significantly from the observed covariance matrix, rejecting the null hypothesis of perfect fit.
 
-<<<<<<< HEAD
+
 **Overall Assessment:** The current model does **not** fit the data well. Multiple fit indices consistently indicate poor fit, suggesting that our hypothesized relationships do not align well with the observed patterns across countries. Our model may be missing important direct paths, correlated errors, or moderating relationships. Despite finding statistically significant predictors, the overall structural specification requires revision to better capture the complex relationships in global education data. Potential improvements could include reconsidering the factor structure or exploring alternative theoretical frameworks.
 
 
 
-
-
-
-=======
-**Overall Assessment:** The theoretical model does **not** adequately represent the underlying data structure. All of the major fit indices point toward poor fit, suggesting that the relationships we proposed between educational infrastructure, research output, demographics, human development, and education spending don’t match what’s actually happening in the data across countries.Even though some predictors ended up being statistically significant, the overall setup of the model likely needs to be revised. It may be missing important direct paths, correlated errors, or moderating relationships. Potential improvements could include adding new paths between variables, rethinking the factor structure, or considering a different theoretical framework that better captures the complexity of global education data.
->>>>>>> 06c89b1c5317618bd34e31a1e91713c21518241b
